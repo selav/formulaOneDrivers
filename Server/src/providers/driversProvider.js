@@ -8,8 +8,7 @@ const _getDriversList = async () =>{
             'driver_ref', 
             "number", 
             'code', 
-            'forename', 
-            'surname', 
+            [sequelize.literal("forename || ' ' || surname"), 'full_name'],
             //'position',
             [
                 sequelize.literal(`(
@@ -43,7 +42,9 @@ const _getDriversList = async () =>{
             ]        
         ],
         order: [
-            [sequelize.literal('"wins"'), 'DESC']
+            [sequelize.literal('"wins"'), 'DESC'],
+            [sequelize.literal('"points"'),"DESC NULLS LAST"],
+            [sequelize.literal("surname || forename")]
         ]
     });
     return driversList;
@@ -55,8 +56,8 @@ const _getRacesDataByDriver = async (driverId) =>{
         where:{
             driver_id: driverId
         },
-        include: [races],
         
+
         attributes: [
             'race_id',
             
@@ -64,7 +65,7 @@ const _getRacesDataByDriver = async (driverId) =>{
             
             [
                 sequelize.literal(`(
-                    SELECT AVG(MILLISECONDS) 
+                    SELECT TO_CHAR((AVG(MILLISECONDS) || ' milliseconds')::interval, 'MI:SS') 
                     FROM LAP_TIMES LT WHERE LT.RACE_ID = results.RACE_ID 
                     AND LT.DRIVER_ID = results.DRIVER_ID
                 )`),
@@ -73,7 +74,7 @@ const _getRacesDataByDriver = async (driverId) =>{
 
             [
                 sequelize.literal(`(
-                    SELECT MIN(MILLISECONDS) 
+                    SELECT TO_CHAR((MIN(MILLISECONDS) || ' milliseconds')::interval, 'MI:SS') 
                     FROM LAP_TIMES LT 
                     WHERE LT.RACE_ID = results.RACE_ID 
                     AND LT.DRIVER_ID = results.DRIVER_ID
@@ -83,7 +84,7 @@ const _getRacesDataByDriver = async (driverId) =>{
             
             [
                 sequelize.literal(`(
-                    SELECT MAX(MILLISECONDS) 
+                    SELECT TO_CHAR((MAX(MILLISECONDS) || ' milliseconds')::interval, 'MI:SS') 
                     FROM LAP_TIMES LT 
                     WHERE LT.RACE_ID = results.RACE_ID 
                         AND LT.DRIVER_ID = results.DRIVER_ID
@@ -103,7 +104,7 @@ const _getRacesDataByDriver = async (driverId) =>{
             
             [
                 sequelize.literal(`(
-                    SELECT MIN(MILLISECONDS) 
+                    SELECT TO_CHAR((MIN(MILLISECONDS) || ' milliseconds')::interval, 'MI:SS') 
                     FROM PIT_STOPS PT 
                     WHERE PT.RACE_ID = results.RACE_ID 
                         AND PT.DRIVER_ID = results.DRIVER_ID
@@ -113,7 +114,7 @@ const _getRacesDataByDriver = async (driverId) =>{
             
             [
                 sequelize.literal(`(
-                    SELECT MAX(MILLISECONDS)
+                    SELECT TO_CHAR((MAX(MILLISECONDS) || ' milliseconds')::interval, 'MI:SS') 
                     FROM PIT_STOPS PT 
                     WHERE PT.RACE_ID = results.RACE_ID 
                         AND PT.DRIVER_ID = results.DRIVER_ID
@@ -134,7 +135,9 @@ const _getRacesDataByDriver = async (driverId) =>{
         order: [
             [sequelize.literal('"race.year"'), 'DESC'],
             [sequelize.literal('"race.race_id"'), 'DESC'],
-        ]
+        ],
+        include: [{model:races,attributes:['race_id','year','name',[sequelize.literal("date || ' ' || race.time"), 'date']]}],
+        raw:true
     })
     return driverRacesData;
 }

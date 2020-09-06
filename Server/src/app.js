@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
@@ -10,6 +11,7 @@ const usersRouter = require('./routes/users');
 const driversRouter = require('./routes/drivers');
 
 const app = express();
+app.use(cors());
 app.use(helmet());
 
 app.use(logger('dev'));
