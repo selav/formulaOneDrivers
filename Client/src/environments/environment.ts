@@ -6,7 +6,8 @@ import { DriversListComponent } from 'src/app/drivers-list/drivers-list.componen
 
 export const environment = {
   production: false,
-  driversApi: 'http://localhost:3000'
+  driversApi: 'http://localhost:3000',
+  google_api_client_id: '693782710363-blmmg53i657mehoveraaomfmb7c97n2u.apps.googleusercontent.com' 
 };
 
 /*

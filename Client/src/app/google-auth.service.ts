@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,7 @@ export class GoogleAuthService {
     // loaded and that we can call gapi.init
     return pload.then(async () => {
       await gapi.auth2
-        .init({ client_id: '693782710363-blmmg53i657mehoveraaomfmb7c97n2u.apps.googleusercontent.com' })
+        .init({ client_id: environment.google_api_client_id })
         .then(auth => {
           this.gapiSetup = true;
           this.authInstance = auth;
