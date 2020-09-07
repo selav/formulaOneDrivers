@@ -31,7 +31,7 @@ npm install
 ```
 
 ### DB Initialize
-> Make sure you have [PostgreSQL](https://www.postgresql.org/) DB server installed.
+> Make sure you have [PostgreSQL](https://www.postgresql.org/download/) DB server installed.
 > Make surcdde that db connection config (development env) is correct on `Server\src\config\database.json` file. You don't need to create DB instance.
 
 > on Server folder run db init command:
@@ -63,5 +63,7 @@ npm start
 > navigate to Client folder and run angular serve command:
 ```
 cd Client
-ng serve
+ng serve -o
 ```
+
+Enjoy :sunglasses:
