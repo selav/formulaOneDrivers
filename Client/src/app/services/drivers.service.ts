@@ -3,8 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { catchError, tap } from 'rxjs/operators';
-import { DriverListItem } from "./driverListItem";
-import { DriverProfileItem } from './driverProfileItem';
+import { DriverListItem } from "../drivers-list/driverListItem";
+import { DriverProfileItem } from '../driver-profile/driverProfileItem';
 
 @Injectable({
   providedIn: 'root'

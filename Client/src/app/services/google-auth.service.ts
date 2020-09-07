@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 })
 export class GoogleAuthService {
 
-  constructor(private _snackBar: MatSnackBar) { }
+  constructor(private _snackBar: MatSnackBar) {}
 
   public gapiSetup: boolean = false; // marks if the gapi library has been loaded
   public authInstance: gapi.auth2.GoogleAuth;
@@ -88,9 +88,16 @@ export class GoogleAuthService {
       await this.initGoogleAuth();
     }
     await this.authInstance.disconnect()
+    this.user = null;
+    this.token = null;
+    this.gapiSetup = false;
+    this.authInstance = null;
     this._snackBar.open('Disconnected', 'Close', {
       duration: 3000,
     });
   }
 
 }
+
+
+

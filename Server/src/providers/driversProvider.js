@@ -2,6 +2,7 @@ const {drivers, results, races, driver_likes, sequelize} = require('../models');
 const googleTokenValidator = require('../services/google-token-validator');
 
 const _getDriversList = async () =>{
+    const CURRENT_YEAR = new Date().getFullYear(); //DATE_PART('YEAR', NOW())
     const driversList = await drivers.findAll({
         attributes: [
             
@@ -15,7 +16,7 @@ const _getDriversList = async () =>{
                 sequelize.literal(`(
                     SELECT MIN(DS.position)
                     FROM DRIVER_STANDINGS DS INNER JOIN RACES R ON R.RACE_ID = DS.RACE_ID
-                    WHERE R.YEAR = DATE_PART('YEAR', NOW())
+                    WHERE R.YEAR = ${CURRENT_YEAR}
                     AND DS.driver_id = drivers.driver_id
                 )`),
                 'position'
@@ -26,7 +27,7 @@ const _getDriversList = async () =>{
                 sequelize.literal(`(
                     SELECT SUM(DS.points)
                     FROM DRIVER_STANDINGS DS INNER JOIN RACES R ON R.RACE_ID = DS.RACE_ID
-                    WHERE R.YEAR = DATE_PART('YEAR', NOW())
+                    WHERE R.YEAR = ${CURRENT_YEAR}
                     AND DS.driver_id = drivers.driver_id
                 )`),
                 'points'
@@ -36,7 +37,7 @@ const _getDriversList = async () =>{
                     SELECT COUNT(*)
                     FROM DRIVER_STANDINGS DS INNER JOIN RACES R ON R.RACE_ID = DS.RACE_ID
                     WHERE DS.WINS = 1
-                    AND R.YEAR = DATE_PART('YEAR', NOW())
+                    AND R.YEAR = ${CURRENT_YEAR}
                     AND DS.driver_id = drivers.driver_id
                 )`),
                 'wins'

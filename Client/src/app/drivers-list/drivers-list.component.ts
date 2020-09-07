@@ -1,12 +1,12 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { DriverListItem } from '../driverListItem';
+import { DriverListItem } from './driverListItem';
 import { Observable } from 'rxjs';
-import { DriversService } from '../drivers.service';
+import { DriversService } from '../services/drivers.service';
 
 @Component({
   selector: 'app-drivers-list',
   template: `
-    <div class="mat-elevation-z8">
+    <div class="mat-elevation-z8 table-wrapper">
       <table mat-table [dataSource]="driverListItems$ | async" class="full-width-table" aria-label="Elements">
         <ng-container matColumnDef="driver_id">
           <th mat-header-cell *matHeaderCellDef >ID</th>
@@ -40,8 +40,8 @@ import { DriversService } from '../drivers.service';
           <td mat-cell *matCellDef="let row">{{row.wins}}</td>
         </ng-container>    
 
-    
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+       
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
     
@@ -52,6 +52,12 @@ import { DriversService } from '../drivers.service';
   styles: [`
     .full-width-table {
       width: 100%;
+    }
+
+    .table-wrapper {
+      margin: 0 5%;
+      height: calc(100vh - 150px);
+      overflow: auto;
     }
     
   `]

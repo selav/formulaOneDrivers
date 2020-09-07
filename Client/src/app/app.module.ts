@@ -9,11 +9,13 @@ import { MatTableModule } from '@angular/material/table';
 import { HttpClientModule } from '@angular/common/http'
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-import { DriversService } from './drivers.service';
+import { DriversService } from './services/drivers.service';
 import { DriverProfileComponent } from './driver-profile/driver-profile.component';
-import { GoogleAuthService } from './google-auth.service';
+import { GoogleAuthService } from './services/google-auth.service';
 import { LikeButtonComponent } from './like-button/like-button.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,9 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     MatPaginatorModule,
     MatSortModule,
     MatSnackBarModule,
-    HttpClientModule
+    HttpClientModule,
+    MatButtonModule,
+    MatIconModule
   ],
   providers: [
     DriversService,

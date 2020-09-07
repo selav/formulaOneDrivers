@@ -56,7 +56,15 @@ module.exports = function(sequelize, DataTypes) {
         unique:false,
         fields:['circuit_id']
       },
-
+      {
+        unique:false,
+        fields:['race_id']
+      },
+      {
+        unique:false,
+        desc:true,
+        fields:['year','race_id']
+      }
       
     ],
     timestamps:false,

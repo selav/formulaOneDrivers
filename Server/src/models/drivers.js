@@ -51,6 +51,10 @@ module.exports = function(sequelize, DataTypes) {
       {
         unique:true,
         fields:['url']
+      },
+      {
+        unique:false,
+        fields:['surname','forename']
       }
     ],
     timestamps:false,
