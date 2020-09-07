@@ -1,7 +1,9 @@
 import { Time } from '@angular/common';
 
 export interface DriverProfileItem {
+    like:Boolean,
     "race_id": Number,
+
     "avg_lap_time": String,
     "min_lap_time": String,
     "max_lap_time": String,

@@ -1,12 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import {  tap } from 'rxjs/operators';
 import { DriverProfileItem } from '../driverProfileItem';
 import { DriversService } from '../drivers.service';
+import { GoogleAuthService } from '../google-auth.service';
 
 @Component({
   selector: 'app-driver-profile',
   template: `
+  <ng-container *ngIf ="driverProfile$" >
+    <app-like-button [driverId]="driverId"></app-like-button>
+</ng-container>
   <div class="mat-elevation-z8">
       <table mat-table [dataSource]="driverProfile$ | async" class="full-width-table" aria-label="Elements">
         <!-- <ng-container matColumnDef="driver_id">
@@ -58,32 +63,43 @@ import { DriversService } from '../drivers.service';
 })
 export class DriverProfileComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, private driversService:DriversService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private driversService:DriversService,
+    private authService:GoogleAuthService,
+  ) { }
 
+  driverId:Number;
+  
   driverProfile$: Observable<DriverProfileItem[]>;
 
   displayedObjects = [
     {name:"race.race_id", title:"Race Id"},
-    {name:"race.name", title:"Race Name"},
+    {name:"race.name", title:"Race"},
     {name:"race.date", title:"Date"},
     {name:"min_lap_time", title:"Min Lap Time"},
     {name:"max_lap_time", title:"Max Lap Time"},
     {name:"pit_stops_num", title:"Pit Stops Number"},
     {name:"pit_stops_min", title:"Fastest Pit Stops"},
     {name:"pit_stops_max", title:"Slowest Pit Stops"},
-    {name:"circuit_name", title:"Circuit Name"},
+    {name:"circuit_name", title:"Circuit"},
     {name:"points", title:"Points"},
-    {name:"position_text", title:"Position Text"},
+    {name:"position_text", title:"Position"},
 
   ];
 
   displayedColumns = this.displayedObjects.map(obj=>obj.name)
 
 
-  ngOnInit(): void {
-    const {driverId} = this.route.snapshot.params;
+  async ngOnInit() {
+    
+    const user = await this.authService.hostComponentInit()
+    
+    const tokenId = user.getAuthResponse().id_token;
 
-    this.driverProfile$ = this.driversService.getDriver(driverId);
+    this.driverId = this.route.snapshot.params.driverId;
+
+    this.driverProfile$ = this.driversService.getDriver(this.driverId).pipe(tap(r=>console.log(r)));
 
   }
 

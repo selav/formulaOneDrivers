@@ -1,4 +1,5 @@
-const {drivers ,results ,races ,sequelize} = require('../models');
+const {drivers, results, races, driver_likes, sequelize} = require('../models');
+const googleTokenValidator = require('../services/google-token-validator');
 
 const _getDriversList = async () =>{
     const driversList = await drivers.findAll({
@@ -50,8 +51,29 @@ const _getDriversList = async () =>{
     return driversList;
 }
 
-const _getRacesDataByDriver = async (driverId) =>{
-    
+const _getRacesDataByDriver = async (driverId,token) =>{
+
+/*
+
+    SELECT 
+    r.race_id,
+    r.name race_name,
+    r.year,
+    (select avg(milliseconds) from lap_times lt where lt.race_id = r.race_id and lt.driver_id = rs.driver_id) avg_lap_time,
+    (select min(milliseconds) from lap_times lt where lt.race_id = r.race_id and lt.driver_id = rs.driver_id) min_lap_time,
+    (select max(milliseconds) from lap_times lt where lt.race_id = r.race_id and lt.driver_id = rs.driver_id) max_lap_time,
+    (select count(*) from pit_stops pt where pt.race_id = r.race_id and pt.driver_id = rs.driver_id) pit_stops_num,
+    (select min(duration) from pit_stops pt where pt.race_id = r.race_id and pt.driver_id = rs.driver_id) pit_stops_min,
+    (select max(duration) from pit_stops pt where pt.race_id = r.race_id and pt.driver_id = rs.driver_id) pit_stops_max,
+    (select name from circuits c where r.circuit_id = c.circuit_id) circuit_name,
+    rs.points,
+    rs.position
+        FROM results rs 
+        inner join races r on r.race_id = rs.race_id
+        and rs.driver_id = 20
+        
+        order by r.year desc, r.race_id desc
+*/
     const driverRacesData = await results.findAll({
         where:{
             driver_id: driverId
@@ -59,10 +81,8 @@ const _getRacesDataByDriver = async (driverId) =>{
         
 
         attributes: [
-            'race_id',
-            
-                
-            
+            'race_id',                     
+        
             [
                 sequelize.literal(`(
                     SELECT TO_CHAR((AVG(MILLISECONDS) || ' milliseconds')::interval, 'MI:SS') 
@@ -142,28 +162,59 @@ const _getRacesDataByDriver = async (driverId) =>{
     return driverRacesData;
 }
 
+const _likeDriver = async (token,driverId,likeState) => {
+    //console.log({token,driverId,likeState})
+    const user_id = await googleTokenValidator.verify(token);
+    if(!user_id){
+        throw new Error('cannot get user id from token');
+    }
+    let driver_id;
+    try{
+        driver_id = Number.parseInt(driverId)
+    }
+    catch(err){
+        throw new Error(`Error parsing driver id to int. ${err}`)
+    }
 
-/*
+    if (likeState){ //like
+        await driver_likes.upsert({
+            driver_id,
+            user_id
+        })
+        return true;
+    }
+    else { //unlike
+        await driver_likes.destroy({
+            where:{
+                driver_id,
+                user_id
+            }
+        })
+        return false;
+    }
+}
 
-SELECT 
-r.race_id,
-r.name race_name,
-r.year,
-(select avg(milliseconds) from lap_times lt where lt.race_id = r.race_id and lt.driver_id = rs.driver_id) avg_lap_time,
-(select min(milliseconds) from lap_times lt where lt.race_id = r.race_id and lt.driver_id = rs.driver_id) min_lap_time,
-(select max(milliseconds) from lap_times lt where lt.race_id = r.race_id and lt.driver_id = rs.driver_id) max_lap_time,
-(select count(*) from pit_stops pt where pt.race_id = r.race_id and pt.driver_id = rs.driver_id) pit_stops_num,
-(select min(duration) from pit_stops pt where pt.race_id = r.race_id and pt.driver_id = rs.driver_id) pit_stops_min,
-(select max(duration) from pit_stops pt where pt.race_id = r.race_id and pt.driver_id = rs.driver_id) pit_stops_max,
-(select name from circuits c where r.circuit_id = c.circuit_id) circuit_name,
-rs.points,
-rs.position
-	FROM results rs 
-	inner join races r on r.race_id = rs.race_id
-	and rs.driver_id = 20
-	
-	order by r.year desc, r.race_id desc
-*/
+const _isLiked = async (token,driverId) => {
+    //console.log({token,driverId,likeState})
+    const user_id = await googleTokenValidator.verify(token).catch(e=>null);
+    let driver_id;
+    try{
+        driver_id = Number.parseInt(driverId)
+    }
+    catch(err){
+        throw new Error(`Error parsing driver id to int. ${err}`)
+    }
+
+
+    const likeExists = await driver_likes.count({ where: { 
+            driver_id,
+            user_id
+        }
+    })
+    return likeExists > 0;
+    
+}
+
 
 
 module.exports = {
@@ -171,8 +222,18 @@ module.exports = {
         const result = await _getDriversList();
         return result;
     },
-    getRacesDataByDriver: async (driverId)=>{
-        const result = await _getRacesDataByDriver(driverId);
+    getRacesDataByDriver: async (driverId,token)=>{
+        const result = await _getRacesDataByDriver(driverId,token);
         return result;
-    }
+    },
+    
+    likeDriver: async (token,driverId,likeState)=>{
+        const result = await _likeDriver(token,driverId,likeState);
+        return result;
+    },
+    isLiked: async (token,driverId)=>{
+        const result = await _isLiked(token,driverId);
+        return result;
+    },
+
 }

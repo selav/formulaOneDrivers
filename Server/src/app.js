@@ -7,7 +7,6 @@ const helmet = require('helmet')
 const compression = require('compression');
 
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
 const driversRouter = require('./routes/drivers');
 
 const app = express();
@@ -23,7 +22,6 @@ app.use(compression()); //Compress all routes
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/api/drivers', driversRouter);
 
 app.use( (err, req, res, next) => {

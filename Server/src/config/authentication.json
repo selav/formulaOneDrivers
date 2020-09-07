@@ -1,0 +1,12 @@
+{
+    "development": {
+        "google-app-client-id":"693782710363-blmmg53i657mehoveraaomfmb7c97n2u.apps.googleusercontent.com"
+    },
+    "test": {
+
+    },
+    "production": {
+
+    }
+  }
+  

@@ -11,12 +11,17 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { DriversService } from './drivers.service';
 import { DriverProfileComponent } from './driver-profile/driver-profile.component';
+import { GoogleAuthService } from './google-auth.service';
+import { LikeButtonComponent } from './like-button/like-button.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
     AppComponent,
     DriversListComponent,
-    DriverProfileComponent
+    DriverProfileComponent,
+    LikeButtonComponent
+
   ],
   imports: [
     BrowserModule,
@@ -25,9 +30,13 @@ import { DriverProfileComponent } from './driver-profile/driver-profile.componen
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
+    MatSnackBarModule,
     HttpClientModule
   ],
-  providers: [DriversService],
+  providers: [
+    DriversService,
+    GoogleAuthService
+  ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent]
 })
