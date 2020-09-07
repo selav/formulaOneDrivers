@@ -32,7 +32,7 @@ npm install
 
 ## DB Initialize
 > Make sure you have [PostgreSQL](https://www.postgresql.org/) DB server installed.
-> Make surre that db connection config (development env) is correct on `Server\src\config\database.json` file. You don't need to create DB instance.
+> Make surcdde that db connection config (development env) is correct on `Server\src\config\database.json` file. You don't need to create DB instance.
 
 > on Server folder run db init command:
 ```
