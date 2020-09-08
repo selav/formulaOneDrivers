@@ -23,6 +23,9 @@ import { GoogleAuthService } from './services/google-auth.service';
       font-weight: bolder;
       font-size: 3rem;
     }
+    *:focus {
+      outline: 0;
+    }
 
   `],
   template: `
@@ -31,7 +34,7 @@ import { GoogleAuthService } from './services/google-auth.service';
       <button (click)="signOut()" >signOut</button>
     </div>
     <div class="header">
-      <span class="logo">
+      <span class="logo" routerLink="">
         <img width="200" alt="F1 Logo" src="../assets/pics/logo.png">
       </span>
       <span class="content">

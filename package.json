@@ -1,0 +1,20 @@
+{
+  "name": "formula-one-drivers",
+  "version": "1.0.0",
+  "description": "[](#top_of_page)Overview\r ------------------------\r A client-server web application that displays Formula 1 drivers data.\r ### Functionality\r 1. Main page -A table of drivers sorted by the wins in the current season.\r 2. Driver Profile - specific driver page with all of his races from all the years.\r 3. Like/Unlike driver mechanism - using Google API for authentication",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/selav/formulaOneDrivers.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/selav/formulaOneDrivers/issues"
+  },
+  "homepage": "https://github.com/selav/formulaOneDrivers#readme"
+}

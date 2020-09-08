@@ -16,13 +16,15 @@ import { LikeButtonComponent } from './like-button/like-button.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { DriverDataComponent } from './driver-profile/driver-data/driver-data.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DriversListComponent,
     DriverProfileComponent,
-    LikeButtonComponent
+    LikeButtonComponent,
+    DriverDataComponent
 
   ],
   imports: [

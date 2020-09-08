@@ -12,6 +12,12 @@ module.exports = {
       const result = await driversProvider.getRacesDataByDriver(driverId,token);
       res.status(200).send(result);
    }),
+   getDriverData: wrap( async (req,res,next) => {
+      //todo: check input validity
+      const {driverId} = req.params;
+      const result = await driversProvider.getDriverData(driverId);
+      res.status(200).send(result);
+   }),
    likeDriver: wrap( async (req,res,next) => {
       //todo: check input validity
       const {token,driverId,likeState} = req.body;
