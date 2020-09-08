@@ -31,7 +31,7 @@ import { GoogleAuthService } from './services/google-auth.service';
   template: `
     <!--The content below is only a placeholder and can be replaced.-->
     <div>
-      <button (click)="signOut()" >signOut</button>
+      <button mat-button (click)="signOut()" >Sign Out</button>
     </div>
     <div class="header">
       <span class="logo" routerLink="">
